@@ -93,7 +93,7 @@ map_br <- merge(map_br, SHP_UF_BR@data, by="id")
 centroids <- setNames(do.call("rbind.data.frame", by(map_br, map_br$UF,
              function(x) {Polygon(x[c('long', 'lat')])@labpt})), c('long', 'lat')) 
 
-## Obtaining the acronym of each state and assigning to the centroid
+## obtaining the acronym of each state and assigning to the centroid
 (x = table(map_br$UF))
 centroids$label <- names(x)
 
@@ -135,21 +135,21 @@ ggplot(map_br) +
   coord_equal() + 
 
   geom_path(color="black") +
-  scale_fill_manual(values = cores , labels = legenda) +
+  scale_fill_manual(values=cores, labels=legenda) +
   
-  theme(legend.title = element_text(face = 'bold', size = 10)) +
-  guides(fill=guide_legend(title = "Population (Milion)")) +
+  theme(legend.title = element_text(face='bold', size=10)) +
+  guides(fill=guide_legend(title="Population (Milion)")) +
   
-  theme(legend.text = element_text(face = NULL, size = 9)) +
+  theme(legend.text = element_text(face=NULL, size=9)) +
   
   theme(legend.background = element_rect(fill="white", size=.5, linetype="dotted")) +
   theme(legend.position=c(0.12, 0.19)) +
   
   with(centroids, annotate(geom="label", x=long, y=lat, label=label, size=2, color='red3')) +
   
-  ggsn::scalebar(map_br, dist = 500, st.size=3, height=0.01, dd2km = TRUE, model = 'WGS84') +
-  ggsn::north(map_br, symbol = 16, scale = 0.15) +
+  ggsn::scalebar(map_br, dist=500, st.size=3, height=0.01, dd2km=TRUE, model='WGS84') +
+  ggsn::north(map_br, symbol=16, scale=0.15) +
   
-  labs(title = "Map of the Brazilian states by population in 2017", y="latitude", x="longitude") 
+  labs(title="Map of the Brazilian states by population in 2017", y="latitude", x="longitude") 
 
 ####################################################################################################
