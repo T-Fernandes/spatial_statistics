@@ -1,37 +1,49 @@
-## Welcome to GitHub Pages
+##  Spatial Statistics
 
-You can use the [editor on GitHub](https://github.com/T-Fernandes/spatial_statistics/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Using spatial statistics to plot the thematic map of the Brazilian population estimated in 2017 by states.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Population Brazil: [Link1](https://www.ibge.gov.br/estatisticas-novoportal/sociais/populacao/9103-estimativas-de-populacao.html?=&t=resultados)
 
-### Markdown
+Shapefile of Brazil: [Link2](http://www.usp.br/nereus/wp-content/uploads/Brasil.zip)
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
+### Reading the population database by cities 
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Pop_BR = read.csv('estimativa_dou_2017.csv', header = T, sep=';')
+```
+### Reading the shapefile of Brazil
+```markdown
+SHP_UF_BR = shapefile('UFEBRASIL.shp')
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+### Plotting thematic map
+```markdown
+library("ggsn")
+library("ggrepel")
 
-### Jekyll Themes
+windows()
+ggplot(map_br) + 
+  aes(x=long, y=lat, group=group, fill=factor(idcores)) +
+  geom_polygon() +
+  coord_equal() + 
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/T-Fernandes/spatial_statistics/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+  geom_path(color="black") +
+  scale_fill_manual(values=cores, labels=legenda) +
+  
+  theme(legend.title = element_text(face='bold', size=10)) +
+  guides(fill=guide_legend(title="Population (Milion)")) +
+  
+  theme(legend.text = element_text(face=NULL, size=9)) +
+  
+  theme(legend.background = element_rect(fill="white", size=.5, linetype="dotted")) +
+  theme(legend.position=c(0.12, 0.19)) +
+  
+  with(centroids, annotate(geom="label", x=long, y=lat, label=label, size=2, color='red3')) +
+  
+  ggsn::scalebar(map_br, dist=500, st.size=3, height=0.01, dd2km=TRUE, model='WGS84') +
+  ggsn::north(map_br, symbol=16, scale=0.15) +
+  
+  labs(title="Map of the Brazilian states by population in 2017", y="latitude", x="longitude")`
 
-### Support or Contact
+```
+![map_br.jpeg](https://github.com/T-Fernandes/spatial_statistics/blob/master/map_br.jpeg?raw=true)
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
